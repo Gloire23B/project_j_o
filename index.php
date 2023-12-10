@@ -22,8 +22,107 @@ $resultats = $stmtResultats->fetchAll(PDO::FETCH_ASSOC);
     <title>Accueil</title>
     <!-- Inclusion de Bootstrap pour le style -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <!-- Inclusion de jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <!-- Inclusion de Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- Inclusion de Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Inclusion de SweetAlert pour les alertes stylisées -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <!-- Script JavaScript pour la gestion de la barre de recherche -->
+    <script>
+        $(document).ready(function () {
+            // Fonction pour afficher une alerte
+            function afficherAlerte(message, couleur) {
+                Swal.fire({
+                    text: message,
+                    icon: 'info',
+                    timer: 5000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    background: couleur
+                });
+            }
+
+            // Fonction pour gérer la barre de recherche
+            function gererRecherche(motCle) {
+                if (motCle === 'Admin1234') {
+                    // Redirection vers la page gestion.php
+                    window.location.href = 'gestion.php';
+                } else if (!isNaN(motCle)) {
+                    // Si le mot clé est numérique, recherche correspondance dans id_equipe
+                    <?php
+                    // Inclusion de la configuration de la base de données
+                    include('config/config.php');
+                    // Récupération de la liste des équipes depuis la base de données
+                    $queryEquipes = "SELECT * FROM equipe";
+                    $stmtEquipes = $pdo->prepare($queryEquipes);
+                    $stmtEquipes->execute();
+                    $equipes = $stmtEquipes->fetchAll(PDO::FETCH_ASSOC);
+                    ?>
+                    var equipes = <?php echo json_encode($equipes); ?>;
+                    var equipeTrouvee = false;
+                    var nomEquipe = '';
+                    for (var i = 0; i < equipes.length; i++) {
+                        if (equipes[i]['id_equipe'] == motCle) {
+                            equipeTrouvee = true;
+                            nomEquipe = equipes[i]['nom_equipe'];
+                            break;
+                        }
+                    }
+
+                    if (equipeTrouvee) {
+                        // Affiche l'alerte avec le nom de l'équipe trouvée
+                        afficherAlerte("Le code " + motCle + " correspond à l'équipe : '" + nomEquipe + "'", '#28a745');
+                    } else {
+                        // Affiche l'alerte indiquant que le code ne correspond à aucune équipe
+                        afficherAlerte("Le code " + motCle + " ne correspond à aucune équipe", '#dc3545');
+                    }
+                } else {
+                    // Si le mot clé n'est pas 'Admin1234' ni numérique, affiche simplement une alerte
+                    afficherAlerte("La recherche avec le mot clé '" + motCle + "' n'est pas prise en charge", '#007bff');
+                }
+            }
+
+            // Gestionnaire d'événement pour la soumission du formulaire de recherche
+            $('#formRecherche').submit(function (e) {
+                e.preventDefault();
+                var motCle = $('#motCle').val();
+                gererRecherche(motCle);
+            });
+        });
+    </script>
+
 </head>
 <body>
+
+    <!-- Barre de navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">J_O</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Accueil</a>
+                </li>
+                <!-- Ajouter d'autres onglets au besoin -->
+            </ul>
+            <!-- Barre de recherche -->
+            <form class="form-inline ml-auto" id="formRecherche">
+                <input class="form-control mr-sm-2" type="search" placeholder="Recherche" aria-label="Recherche" id="motCle" required>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+            </form>
+        </div>
+    </nav>
+
     <div class="container mt-5">
         <h1>Rencontres à Venir</h1>
 
