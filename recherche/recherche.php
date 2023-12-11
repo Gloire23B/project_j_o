@@ -28,7 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Recherche</h1>
+        <h1 class="text_center">Recherche</h1>
+        <p class><a href="../gestion.php">Home</a></p>
+        <br><br>
 
         <!-- Formulaire de recherche -->
         <form method="post" class="form-inline mt-3">

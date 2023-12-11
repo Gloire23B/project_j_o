@@ -84,7 +84,10 @@ $personnel = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Gestion du Personnel</title>
 </head>
 <body>
-    <h1>Gestion du Personnel</h1>
+   
+    <h1 class="text-center">Gestion du Personnel</h1>
+    <p class="text-center"><a href="../gestion.php">Home</a></p>
+    <br><br>
 
     <!-- Formulaire d'ajout de personnel -->
     <form method="post">
@@ -127,9 +130,11 @@ $personnel = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <button type="submit" class="btn btn-primary" name="action" value="ajouter">Ajouter Personnel</button>
     </form>
+    <br><br>
 
     <!-- Liste du personnel existant -->
     <h2 class="mt-4">Liste du Personnel</h2>
+    <br>
     <table class="table">
         <tr>
             <th>Prénom</th>
@@ -148,8 +153,8 @@ $personnel = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?php echo $individu['id_equipe']; ?></td>
                 <td>
                     <!-- Liens pour modifier et supprimer chaque membre du personnel -->
-                    <a href="modifier_personnel.php?id=<?php echo $individu['id_personnel']; ?>">Modifier</a>
-                    <a href="personnel.php" onclick="supprimerPersonnel(<?php echo $individu['id_personnel']; ?>)">Supprimer</a>
+                    <a href="modifier_personnel.php?id=<?php echo $individu['id_personnel']; ?>" class="btn btn-success">Modifier</a>
+                    <a href="personnel.php" onclick="supprimerPersonnel(<?php echo $individu['id_personnel']; ?>)" class="btn btn-danger btn-sm">Supprimer</a>
                 </td>
             </tr>
         <?php endforeach; ?>

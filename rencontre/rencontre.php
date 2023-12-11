@@ -87,7 +87,9 @@ $equipes = $stmtEquipes->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Gestion des Matches</h1>
+        <h1 class="text-center">Gestion des Matches</h1>
+        <p class="text-center"><a href="../gestion.php">Home</a></p>
+        <br><br>
 
         <!-- Formulaire de planification de match -->
         <form method="post">
@@ -131,9 +133,12 @@ $equipes = $stmtEquipes->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <button type="submit"  class="btn btn-primary" name="action" value="ajouter">Planifier Match</button>
         </form>
+        <br><br>
 
         <!-- Liste des matches existants -->
         <h2 class="mt-4">Liste des Matches</h2>
+        <br>
+
         <table class="table">
             <thead>
                 <tr>

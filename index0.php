@@ -3,7 +3,6 @@
 include('config/config.php');
 
 
-
 // Récupération des rencontres à venir
 $queryRencontresAVenir = "SELECT * FROM rencontre WHERE date_rencontre > NOW() ORDER BY date_rencontre ASC";
 $stmtRencontresAVenir = $pdo->prepare($queryRencontresAVenir);
@@ -116,10 +115,7 @@ $resultats = $stmtResultats->fetchAll(PDO::FETCH_ASSOC);
                     <a class="nav-link" href="#" id="navAccueil">Accueil</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="admin/formulaire_membre.php" id="navInscription">Inscription</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="admin/formulaire_connexion.php" id="navConnexion">Connexion</a>
+                    <a class="nav-link" href="logout.php" id="navDeconnexion">Deconnexion</a>
                 </li>
                 <!-- Ajouter d'autres onglets au besoin -->
             </ul>

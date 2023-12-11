@@ -78,6 +78,7 @@ $equipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <h1 class="text-center">Gestion des Équipes</h1>
+    <p class="text-center"><a href="../gestion.php">Home</a></p>
 
     <!-- Formulaire d'ajout d'équipe -->
     <form method="post">
