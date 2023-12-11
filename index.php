@@ -57,35 +57,7 @@ $resultats = $stmtResultats->fetchAll(PDO::FETCH_ASSOC);
                 if (motCle === 'Admin1234') {
                     // Redirection vers la page gestion.php
                     window.location.href = 'gestion.php';
-                } else if (!isNaN(motCle)) {
-                    // Si le mot clé est numérique, recherche correspondance dans id_equipe
-                    <?php
-                    // Inclusion de la configuration de la base de données
-                    include('config/config.php');
-                    // Récupération de la liste des équipes depuis la base de données
-                    $queryEquipes = "SELECT * FROM equipe";
-                    $stmtEquipes = $pdo->prepare($queryEquipes);
-                    $stmtEquipes->execute();
-                    $equipes = $stmtEquipes->fetchAll(PDO::FETCH_ASSOC);
-                    ?>
-                    var equipes = <?php echo json_encode($equipes); ?>;
-                    var equipeTrouvee = false;
-                    var nomEquipe = '';
-                    for (var i = 0; i < equipes.length; i++) {
-                        if (equipes[i]['id_equipe'] == motCle) {
-                            equipeTrouvee = true;
-                            nomEquipe = equipes[i]['nom_equipe'];
-                            break;
-                        }
-                    }
 
-                    if (equipeTrouvee) {
-                        // Affiche l'alerte avec le nom de l'équipe trouvée
-                        afficherAlerte("Le code " + motCle + " correspond à l'équipe : '" + nomEquipe + "'", '#28a745');
-                    } else {
-                        // Affiche l'alerte indiquant que le code ne correspond à aucune équipe
-                        afficherAlerte("Le code " + motCle + " ne correspond à aucune équipe", '#dc3545');
-                    }
                 } else {
                     // Si le mot clé n'est pas 'Admin1234' ni numérique, affiche simplement une alerte
                     afficherAlerte("La recherche avec le mot clé '" + motCle + "' n'est pas prise en charge", '#007bff');
