@@ -65,6 +65,29 @@ $stmt = $pdo->prepare($query);
 $stmt->execute();
 $equipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+if (isset($_POST['filter'])) {
+    $matchFilter = $_POST['matchFilter'];
+    if ($matchFilter == 'withMatch') {
+        $query = "SELECT DISTINCT equipe.* FROM equipe 
+                  JOIN rencontre ON equipe.id_equipe = rencontre.id_equipe_a OR equipe.id_equipe = rencontre.id_equipe_b 
+                  WHERE date_rencontre > NOW()";
+    } elseif ($matchFilter == 'withoutMatch') {
+        $query = "SELECT * FROM equipe 
+                  WHERE id_equipe NOT IN (
+                      SELECT DISTINCT id_equipe_a FROM rencontre WHERE date_rencontre > NOW()
+                  ) 
+                  AND id_equipe NOT IN (
+                      SELECT DISTINCT id_equipe_b FROM rencontre WHERE date_rencontre > NOW()
+                  )";
+    } else {
+        $query = "SELECT * FROM equipe";
+    }
+
+    $requete = $pdo->prepare($query);
+    $requete->execute();
+    $equipes = $requete->fetchAll(PDO::FETCH_ASSOC);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -81,9 +104,9 @@ $equipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <p class="text-center"><a href="../gestion.php">Home</a></p>
 
     <!-- Formulaire d'ajout d'équipe -->
-    <form method="post">
+    <form method="post" class="text-center">
         <div class="form-group"></div>
-            <label for="nom_equipe">Nom de l'équipe:</label>
+            <label for="nom_equipe"><h2>Nom de l'équipe: </h2></label>
             <input type="text" name="nom_equipe" class="form-text" id="nom_equipe" required>
         </div>
         <button type="submit" name="action" class="btn btn-success" value="ajouter">Ajouter Équipe</button>
@@ -91,26 +114,39 @@ $equipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <br><br>
     
     <!-- Liste des équipes existantes -->
-    <table class="table table-bordered">
-            <tr>
-                <th>ID</th>
-                <th>Nom de L'équipe</th>
-                <th>Action</th>
-            </tr>
+    <main class="container mt-3 text-center">
+        <form method="post" action="" class="mt-3 mb-3">
+            <label for="matchFilter">Filtre :</label>
+            <select name="matchFilter" id="matchFilter">
+                <option value="all">Tous</option>
+                <option value="withMatch">Équipes avec des matchs à venir</option>
+                <option value="withoutMatch">Équipes sans match à venir</option>
+            </select>
+            <input type="submit" name="filter" value="Filtrer">
+        </form>
+        <br><br>
 
-            <?php foreach ($equipes as $equipe): ?>
+        <table class="table table-bordered">
                 <tr>
-                    <td><?php echo $equipe['id_equipe']; ?></td>
-                    <td><?php echo $equipe['nom_equipe']; ?></td>
-
-                    <td>
-                        <!-- Liens pour modifier et supprimer chaque équipe -->
-                        <a href="modifier_equipe.php?id=<?php echo $equipe['id_equipe']; ?>" class="btn btn-primary">Modifier</a>
-                        <a href="#" onclick="supprimerEquipe(<?php echo $equipe['id_equipe']; ?>)" class="btn btn-danger">Supprimer</a>
-                    </td>
+                    <th>ID</th>
+                    <th>Nom de L'équipe</th>
+                    <th>Action</th>
                 </tr>
-            <?php endforeach; ?>
 
+                <?php foreach ($equipes as $equipe): ?>
+                    <tr>
+                        <td><?php echo $equipe['id_equipe']; ?></td>
+                        <td><?php echo $equipe['nom_equipe']; ?></td>
+
+                        <td>
+                            <!-- Liens pour modifier et supprimer chaque équipe -->
+                            <a href="modifier_equipe.php?id=<?php echo $equipe['id_equipe']; ?>" class="btn btn-primary">Modifier</a>
+                            <a href="#" onclick="supprimerEquipe(<?php echo $equipe['id_equipe']; ?>)" class="btn btn-danger">Supprimer</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+        </table>
+    </main>
     <!-- Script JavaScript pour la suppression asynchrone des équipes -->
     <script>
         function supprimerEquipe(id_equipe) {
